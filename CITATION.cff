@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use or reference this tutorial, please cite it as below."
+authors:
+  - family-names: Couto
+    given-names: Alec
+    orcid: ""
+title: "Add Infisical to Your Python App with the SDK"
+version: 1.0.0
+date-released: 2026-04-26
+url: "https://github.com/bluedepin/infisical-sdk-tutorial"
+license: MIT
+keywords:
+  - infisical
+  - secrets-management
+  - python
+  - sdk
+  - universal-auth
+  - tutorial
