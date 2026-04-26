@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "title": "Add Infisical to Your Python App with the SDK",
+  "tools": [
+    {"name": "docker", "version": ">=24.0", "check": "docker --version"},
+    {"name": "docker compose", "version": ">=2.20", "check": "docker compose version"},
+    {"name": "python", "version": ">=3.12", "check": "python3 --version"},
+    {"name": "git", "version": ">=2.40", "check": "git --version"}
+  ],
+  "env": {
+    "required_one_of": [
+      {"name": "INFISICAL_CLIENT_ID + INFISICAL_CLIENT_SECRET", "description": "Universal Auth machine-identity credentials. Either pair against Infisical Cloud (https://app.infisical.com) or against a self-hosted instance set via INFISICAL_HOST."}
+    ]
+  },
+  "resources": {
+    "disk_mb": 1500,
+    "ram_mb": 1500
+  },
+  "estimated_duration_minutes": 30,
+  "supported_platforms": ["linux", "macos"]
+}

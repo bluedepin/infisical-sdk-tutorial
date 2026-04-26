@@ -1,0 +1,20 @@
+# Local config (reader's secrets / personal collection layout)
+.env
+collections.yaml
+
+# Qdrant persistent volume
+qdrant-data/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/

@@ -1,0 +1,27 @@
+# infisical-sdk-tutorial
+
+> A beginner-friendly walkthrough for fetching secrets in Python via the Infisical SDK, using Universal Auth machine identities. Self-hosted or cloud — both paths covered. Runnable by humans or AI agents.
+
+This repository is the canonical source for the tutorial post "Add Infisical to Your Python App with the SDK", published on Medium with mirrors on Hashnode and Hacker Noon. It is the third post in a three-part series; the first covers building a multi-collection RAG with LlamaIndex and Qdrant, the second covers Infisical via the CLI.
+
+## Core docs
+
+- [README.md](README.md): Full tutorial — every file shown inline.
+- [docs/troubleshooting.md](docs/troubleshooting.md): Common errors with fixes.
+
+## Configuration
+
+- [prerequisites.json](prerequisites.json): Machine-readable required tools/versions/env.
+
+## Related posts
+
+- Build a RAG System with LlamaIndex and Qdrant in Docker: https://github.com/bluedepin/rag-llamaindex-qdrant-docker
+- Add Infisical to Your Docker Stack with the CLI: https://github.com/bluedepin/infisical-cli-tutorial
+
+## Out of scope
+
+- Vault or Doppler comparisons beyond a one-paragraph framing.
+- Kubernetes-native secret operators.
+- Application-level encryption beyond what Infisical provides at rest.
+- Other-language SDKs (Node, Go, Java) — Python only here.
+- Windows-specific instructions — Linux/macOS only, with a one-line WSL note.
