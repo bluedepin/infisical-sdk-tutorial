@@ -1,0 +1,5 @@
+# GitHub Pages config — used by jekyll-theme-cayman to inject GA tracking.
+theme: jekyll-theme-cayman
+google_analytics: G-8VM391J4V2
+title: Add Infisical to Your Python App with the SDK
+description: Fetch secrets at runtime via the Python SDK with Universal Auth. Self-hosted or cloud.
