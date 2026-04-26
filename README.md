@@ -109,13 +109,13 @@ services:
       - redis_data:/data
 
   infisical:
-    image: infisical/infisical:v0.110.0
+    image: infisical/infisical:v0.159.22
     ports:
       - "8080:8080"
     environment:
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - ROOT_ENCRYPTION_KEY=${ROOT_ENCRYPTION_KEY}
-      - DB_CONNECTION_URL=postgresql://infisical:password@db:5432/infisical
+      - DB_CONNECTION_URI=postgresql://infisical:password@db:5432/infisical
       - REDIS_URL=redis://redis:6379
       - SITE_URL=http://localhost:8080
       - AUTH_SECRET=${AUTH_SECRET}
@@ -210,7 +210,7 @@ Create a clean virtual environment and install the SDK:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install infisicalsdk==1.0.10
+pip install infisicalsdk==1.0.16
 ```
 
 > **Why this matters: package name is `infisicalsdk` not `infisical-sdk`.** Running `pip install infisical-sdk` fails with "No matching distribution found for infisical-sdk" because the hyphenated name does not exist on PyPI. This is the most common first-time error when developers search for the package by intuition.
@@ -275,9 +275,9 @@ def list_all() -> dict[str, str]:
 
 **One fetch per name.** `get()` uses `lru_cache(maxsize=128)`. The first call for a given name makes a network round-trip to Infisical and caches the result. The 128-slot cache is large enough for most single-service applications. For secrets that rotate frequently, call `get.cache_clear()` before re-fetching.
 
-**The `host=` kwarg is required for self-hosted instances.** `InfisicalSDKClient(host=_HOST)` routes all requests to the URL in `_HOST`. Cloud users either omit the kwarg or leave `INFISICAL_HOST` unset — the default value `https://app.infisical.com` handles both cases. Self-hosted users must set `INFISICAL_HOST=http://localhost:8080` (or their server URL) before running.
+**The `host=` kwarg is mandatory.** `InfisicalSDKClient(host=_HOST)` is required — the constructor takes `host` as a required positional parameter and calling `InfisicalSDKClient()` with no arguments raises `TypeError`. Cloud users leave `INFISICAL_HOST` unset and the helper defaults `_HOST` to `https://app.infisical.com`, which is always passed to the constructor. Self-hosted users set `INFISICAL_HOST=http://localhost:8080` (or their server URL) before running.
 
-**Login returns nothing observable.** `client.auth.universal_auth.login()` does not return a token object to the caller. Success is implicit: the client stores the token internally and attaches it to all subsequent requests. Failure raises `InfisicalSDKException`. No return-value check is needed.
+**Login returns nothing observable.** `client.auth.universal_auth.login()` does not return a token object to the caller. Success is implicit: the client stores the token internally and attaches it to all subsequent requests. Failure raises `InfisicalError`. No return-value check is needed.
 
 **Path scoping prevents over-fetching.** The `secret_path="/openai-rag"` argument in both `get_secret_by_name` and `list_secrets` restricts results to that path. A machine identity scoped to `/openai-rag` will receive a 403 if the code passes `secret_path="/"`. This enforces the Principle of Least Privilege at the SDK call level.
 
@@ -402,12 +402,12 @@ Universal Auth tokens expire after a default TTL of 7200 seconds (two hours). A 
 On an auth failure, clear the LRU cache and re-login immediately. The calling function retries automatically after the cache is refreshed.
 
 ```python
-from infisicalsdk import InfisicalSDKException
+from infisicalsdk import InfisicalError
 
 def safe_get(name: str) -> str:
     try:
         return get(name)
-    except InfisicalSDKException as exc:
+    except InfisicalError as exc:
         if "Unauthorized" in str(exc) or "401" in str(exc):
             _client.cache_clear()
             get.cache_clear()
@@ -454,11 +454,11 @@ Call `start_renewal_thread()` once during application startup. The thread runs s
 
 ### pip install infisical-sdk fails: No matching distribution
 
-The PyPI package name is `infisicalsdk` — no hyphen, no underscore. The name `infisical-sdk` does not exist on PyPI. Replace `pip install infisical-sdk` with `pip install infisicalsdk==1.0.10` to resolve the error immediately. See [docs/troubleshooting.md](docs/troubleshooting.md).
+The PyPI package name is `infisicalsdk` — no hyphen, no underscore. The name `infisical-sdk` does not exist on PyPI. Replace `pip install infisical-sdk` with `pip install infisicalsdk==1.0.16` to resolve the error immediately. See [docs/troubleshooting.md](docs/troubleshooting.md).
 
-### InfisicalSDKException Token expired during long ingestion
+### InfisicalError Token expired during long ingestion
 
-Universal Auth tokens have a default TTL of 7200 seconds. A long ingestion job that exceeds this window will raise `InfisicalSDKException` with an "Unauthorized" message. Implement Pattern 1 or Pattern 2 from Step 8, or increase the TTL on the machine identity's Universal Auth configuration in the Infisical UI. See [docs/troubleshooting.md](docs/troubleshooting.md).
+Universal Auth tokens have a default TTL of 7200 seconds (configurable per machine identity in the Infisical UI). A long ingestion job that exceeds this window will raise `InfisicalError` with an "Unauthorized" message. Implement Pattern 1 or Pattern 2 from Step 8, or increase the TTL on the machine identity's Universal Auth configuration in the Infisical UI. See [docs/troubleshooting.md](docs/troubleshooting.md).
 
 ### Self-hosted: SSL: CERTIFICATE_VERIFY_FAILED
 
