@@ -486,6 +486,10 @@ New to the series and want to build the RAG stack that this tutorial extends fro
 
 - [Build a RAG System with LlamaIndex and Qdrant in Docker](https://github.com/bluedepin/rag-llamaindex-qdrant-docker)
 
+## Repo activity
+
+![Repobeats analytics image](https://repobeats.axiom.co/api/embed/8b5ad0a09e5b85ba817f4a33d0ea0e05c99a6f33.svg "Repobeats analytics image")
+
 ## Licence and credits
 
 Licence: MIT for code (see `LICENSE-CODE`), CC-BY-4.0 for prose (see `LICENSE-PROSE`). By Alec Silva Couto, 2026.
